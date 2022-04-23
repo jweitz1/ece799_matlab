@@ -1,5 +1,5 @@
 clear;
-runs = primes(30);
+runs = primes(20);
 output = [];
 for r=runs(2:end)
     s.Rb_size=12;
@@ -13,7 +13,7 @@ for r=runs(2:end)
     s.Kc = randi([0,10000000],1);
     s.Pt=1000;
     fprintf("RBs %d Nclu %d alpha %d rx %d ry %d Kc %d\n", s.RBs, s.Nclu, s.alpha, s.rx, s.ry, s.Kc);
-    s.csi = csi_gen(s.Nu,s.Nsc,1.5,0.2,1.0);
+    s.csi = csi_gen(s.Nu,s.Nsc,1.5,.1,1);
     [s.L,s.C,s.L_nh,s.C_nh] = chaoticmap(s.Nu,s.Nsc,s.RBs,s.alpha,s.rx,s.ry,s.Kc,s.Rb_size,s.csi);
     [s.Pn_opt,s.csi_ra,s.Cn] = waterfilling(s.csi,s.C,s.RBs,s.Pt,s.Rb_size);
     [s.Pn_opt2,s.csi_ra2,s.Cn2] = waterfilling(s.csi,s.C_nh,s.RBs,s.Pt,s.Rb_size);
