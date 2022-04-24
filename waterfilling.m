@@ -60,7 +60,7 @@ function [Pn_opt,csi_ra, Cn] = waterfilling(csi,C, RBs, Pt, Rb_size)
         Pn_opt{1,i} = max(1./mu - 1./csi_ra{1,i},0);
         Cn{1,i}=0;
         for slot=1:Nclu
-            Cn{1,i} = Cn{1,i}+(1*log2(1+Pn_opt{1,i}.*csi_ra{slot,i})); % Max Throughput without considering the bandwidth, B
+            Cn{1,i} = Cn{1,i}+sum(1*log2(1+Pn_opt{1,i}.*csi_ra{slot,i})); % Max Throughput without considering the bandwidth, B
         end
     end
 
