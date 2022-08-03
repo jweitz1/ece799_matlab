@@ -35,7 +35,7 @@ function [Pn_opt,csi_ra, Cn] = waterfilling(csi,C, RBs, Pt, Rb_size, update_peri
     end
 
     %mc = length(csi); % Number of subchannels/subcarriers
-    M = 1e4;          % Number of grid points you want to compute  the lagrangian dual g of mu
+    M = 1e3;          % Number of grid points you want to compute  the lagrangian dual g of mu
     mu_axis = linspace(1e-15,5,M);
 
     % Power allocation for each Time Slot
