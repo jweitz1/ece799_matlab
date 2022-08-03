@@ -1,4 +1,4 @@
-function [L,C,csi,L_nh,C_nh] = chaoticmap(Nu,Nsc,RBs,alpha,rx,ry,Kc,Rb_size, csi)
+function [L,C,L_nh,C_nh,C_ideal] = chaoticmap(Nu,Nsc,RBs,alpha,rx,ry,Kc,Rb_size, csi)
 
  %When Frequency Hopping is activated, this code is executed 
 % after run button is pushed. Currently, Chaotic Map Technique 
@@ -158,11 +158,6 @@ function [L,C,csi,L_nh,C_nh] = chaoticmap(Nu,Nsc,RBs,alpha,rx,ry,Kc,Rb_size, csi
             cluster_qual = zeros(1,Nclu);
             for row=1:Nclu
                 cluster_qual(row) = sum(csi{1,column}((row-1)*RBs*Rb_size+1:row*RBs*Rb_size));
-                %if sum(csi{1,1}((row-1)*RBs*Rb_size+1:row*RBs*Rb_size))>sum(csi{1,column}((row-1)*RBs*Rb_size+1:row*RBs*Rb_size))
-                %    C_nh(row,column)=0;
-                %else
-                %    C_nh(row,column)=column-1;
-                %end
             end
             cluster_qual(cluster_avail==0)=0;
             [M, I] = max(cluster_qual);
@@ -170,8 +165,7 @@ function [L,C,csi,L_nh,C_nh] = chaoticmap(Nu,Nsc,RBs,alpha,rx,ry,Kc,Rb_size, csi
             cluster_avail(I) = 0;
             
         end
-
-
+                
         if Nu<Nclu
             for i=1:size(C_nh,1)
                 for j=1:size(C_nh,2)
@@ -187,6 +181,38 @@ function [L,C,csi,L_nh,C_nh] = chaoticmap(Nu,Nsc,RBs,alpha,rx,ry,Kc,Rb_size, csi
 
         %C_nh=C_nh+1;
         L_nh=C_nh;
+        
+        C_ideal=zeros(Nclu,Nclu);
+        C_ideal=C_ideal+3301;
+        
+        for slot=1:Nu
+            cluster_avail = ones(1,Nclu);
+            for column=1:Nu
+                cluster_qual = zeros(1,Nclu);
+                for row=1:Nclu
+                    cluster_qual(row) = sum(csi{slot,column}((row-1)*RBs*Rb_size+1:row*RBs*Rb_size));
+                end
+                cluster_qual(cluster_avail==0)=-10000000;
+                [M, I] = max(cluster_qual);
+                C_ideal(I,slot)=column;
+                cluster_avail(I) = 0;
+
+            end
+        end
+        
+        if Nu<Nclu
+            for i=1:size(C_ideal,1)
+                for j=1:size(C_ideal,2)
+                    if Nu<=C_ideal(i,j)
+                        C_ideal(i,j)=randi([1 Nu],1);                               
+                    end
+                end
+            end
+
+        elseif Nu>Nclu
+           error('Max Users allowed = #Subcarriers/(#RB*Rb_size)');
+        end
+
     %end
     %When there are less users than clusters we assign randomly
     %the free clusters to the users
