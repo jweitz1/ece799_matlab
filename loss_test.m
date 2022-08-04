@@ -4,10 +4,12 @@ function loss_test(d0, N)
     output = [];
     output2 = [];
     output3 = [];
+    output4 = [];
     th1 = [];
     th2 = [];
     th3 = [];
     th4 = [];
+    th5 = [];
     ds_array = linspace(0,1,25);
     var = 1.5;
     k = 50; % inner loop count
@@ -15,10 +17,12 @@ function loss_test(d0, N)
         percentage = 0;
         percentage2 = 0;
         percentage3 = 0;
+        percentage4 = 0;
         t1 = 0;
         t2 = 0;
         t3 = 0;
         t4 = 0;
+        t5 = 0;
         for i = 1:k
             s.Rb_size=12;
             s.Nu = N;
@@ -38,6 +42,7 @@ function loss_test(d0, N)
             [s.Pn_opt2,s.csi_ra2,s.Cn2] = waterfilling(s.csi,s.C_nh,s.RBs,s.Pt,s.Rb_size,p_aloc_rate);
             [s.Pn_opt3,s.csi_ra3,s.Cn3] = waterfilling(s.csi,s.C_ideal,s.RBs,s.Pt,s.Rb_size,p_aloc_rate);
             [s.Pn_opt4,s.csi_ra4,s.Cn4] = waterfilling(s.csi,s.C_ideal,s.RBs,s.Pt,s.Rb_size,1);
+            [s.Pn_opt5,s.csi_ra5,s.Cn5] = waterfilling(s.csi,s.C_nh,s.RBs,s.Pt,s.Rb_size,1);
 
             s.count = zeros(1,s.Nu);
             for i=1:s.Nu
@@ -46,46 +51,52 @@ function loss_test(d0, N)
             end
 
             %use the throughput for user 1
-            %s.Th=sum(cell2mat(s.Cn))/s.Nu/s.Nclu;
-            s.Th=sum(s.Cn{1})/s.Nclu;
+            s.Th=sum(cell2mat(s.Cn))/s.Nu/s.Nclu;
             fprintf("FH average throughput per slot %f bps/Hz\n", s.Th);
-            %s.Th2=sum(cell2mat(s.Cn2))/s.Nu/s.Nclu;
-            s.Th2=sum(s.Cn2{1})/s.Nclu;
+            s.Th2=sum(cell2mat(s.Cn2))/s.Nu/s.Nclu;
             s.Nts=size(s.C,2);
             fprintf("Non FH average throughput per slot %f bps/Hz\n", s.Th2);
-            %s.Th3=sum(cell2mat(s.Cn3))/s.Nu/s.Nclu;
-            s.Th3=sum(s.Cn3{1})/s.Nclu;
+            s.Th3=sum(cell2mat(s.Cn3))/s.Nu/s.Nclu;
             fprintf("Ideal FH average throughput per slot %f bps/Hz\n", s.Th3)
-            s.Th4=sum(s.Cn4{1})/s.Nclu;
+            s.Th4=sum(cell2mat(s.Cn4))/s.Nu/s.Nclu;
             fprintf("Ideal FH Continous Power average throughput per slot %f bps/Hz\n", s.Th4)
+            s.Th5=sum(cell2mat(s.Cn5))/s.Nu/s.Nclu;
+            fprintf("Ideal FH Continous Power average throughput per slot %f bps/Hz\n", s.Th5)
             %fprintf("Hopping Throughput Loss %f%%\n", 100.0-(s.Th/s.Th2)*100.0);
             percentage = percentage + (100.0-(abs(s.Th)/abs(s.Th2))*100.0);
             percentage2 = percentage2 + (100.0-(abs(s.Th)/abs(s.Th3))*100.0);
             percentage3 = percentage3 + (100.0-(abs(s.Th)/abs(s.Th4))*100.0);
+            percentage4 = percentage4 + (100.0-(abs(s.Th)/abs(s.Th5))*100.0);
             %output = [output s];
             t1 = t1 + s.Th;
             t2 = t2 + s.Th2;
             t3 = t3 + s.Th3;
             t4 = t4 + s.Th4;
+            t5 = t5 + s.Th5;
         end
         percentage = percentage/k;
         percentage2 = percentage2/k;
         percentage3 = percentage3/k;
+        percentage4 = percentage4/k;
         t1 = t1/k;
         t2 = t2/k;
         t3 = t3/k;
         t4 = t4/k;
+        t5 = t5/k;
         fprintf("After %d runs, for ds = %f:\n", k, ds);
         fprintf("CSM vs Non Hopping Throughput Loss %f%%\n", percentage);
         fprintf("CSM vs Ideal Hopping Throughput Loss %f%%\n", percentage2);
         fprintf("CSM vs Ideal Hopping Continuous Power Allocation Throughput Loss  %f%%\n", percentage3);
+        fprintf("CSM vs Non Hopping Continuous Power Allocation Throughput Loss  %f%%\n", percentage3);
         output = [output percentage];
         output2 = [output2 percentage2];
         output3 = [output3 percentage3];
+        output4 = [output4 percentage4];
         th1 = [th1 t1];
         th2 = [th2 t2];
         th3 = [th3 t3];
         th4 = [th4 t4];
+        th5 = [th5 t5];
     end
     %figure(1);
     %plot(ds_array, output);
@@ -93,5 +104,5 @@ function loss_test(d0, N)
     %ylabel('Througput Loss %');
     %xlabel('d_{s}');
     f = sprintf('loss_comp_N%d_d0_0p%d.mat', N, round(10*abs(d0 - fix(d0))));
-    save(f, 'd0', 'ds_array', 'output', 'output2', 'output3', 'N', 'k', 'th1', 'th2', 'th3', 'th4')
+    save(f, 'd0', 'ds_array', 'output', 'output2', 'output3', 'output4','N', 'k', 'th1', 'th2', 'th3', 'th4', 'th5')
 end

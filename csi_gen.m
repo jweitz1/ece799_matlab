@@ -26,6 +26,8 @@ function [csi] = csi_gen(Nu,Nsc,var,ds,d0)
         for j=2:Nsc
             %First order autoregressive time varying fading channel
             csi{j,i}(1:Nsc) = alpha*csi{j-1,i}(1:Nsc)+normrnd(0,fade_var,[1,Nsc]);
+            %Don't allow csi to be less than 0.
+            csi{j,i}(1:Nsc) = max(csi{j,i}(1:Nsc),0);
         end
     end
 end

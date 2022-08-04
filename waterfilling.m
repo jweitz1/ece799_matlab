@@ -35,8 +35,8 @@ function [Pn_opt,csi_ra, Cn] = waterfilling(csi,C, RBs, Pt, Rb_size, update_peri
     end
 
     %mc = length(csi); % Number of subchannels/subcarriers
-    M = 1e3;          % Number of grid points you want to compute  the lagrangian dual g of mu
-    mu_axis = linspace(1e-15,5,M);
+    M = 2e3;          % Number of grid points you want to compute  the lagrangian dual g of mu
+    mu_axis= linspace(1e-15,max(max(cell2mat(csi))),M);
 
     % Power allocation for each Time Slot
     Pn = cell(1,Nclu);          % Power
@@ -51,22 +51,17 @@ function [Pn_opt,csi_ra, Cn] = waterfilling(csi,C, RBs, Pt, Rb_size, update_peri
         for slot=1:Nclu         
             if mod(slot-1,update_period)==0
                 %If it's the update period, update the power allocation for the slot
-                Pn{1,i} = max((1./mu_axis - (1./csi_ra{slot,i})'),0); % A value less than 0 will be replaced by 0.
+                Pn{1,i} = max((1./mu_axis - (1./csi_ra{i,slot})'),0); % A value less than 0 will be replaced by 0.
                 %% Lagrange Dual Function
-                g{1,i} = sum(log(1+Pn{1,i}.*(repmat(csi_ra{slot,i}',[1 M])))) - mu_axis.*(sum(Pn{1,i}) - Pt);
+                g{1,i} = sum(log(1+Pn{1,i}.*(repmat(csi_ra{i,slot}',[1 M])))) - mu_axis.*(sum(Pn{1,i}) - Pt);
                 %We have to find the minimum of g
                 [ind]= find(g{1,i}==min(g{1,i})); %We need the index to compute the optimal mu
                 mu = mu_axis(ind);
                 %Compute the optimal Powers based on the optimal mu value.
-                Pn_opt{1,i} = max(1./mu - 1./csi_ra{slot,i},0);
-            %else
-            %    %propagate the previous slot allocation forward
-            %    Pn{1,i} = Pn{1,i-1};
-            %    g{1,i} = g{1,i-1};
-            %    Pn_opt{1,i} = Pn_opt{1,i-1};
+                Pn_opt{1,i} = max(1./mu - 1./csi_ra{i,slot},0);
             end
             
-            Cn{1,i} = Cn{1,i}+sum(1*log2(1+Pn_opt{1,i}.*csi_ra{slot,i})); % Max Throughput without considering the bandwidth, B
+            Cn{1,i} = Cn{1,i}+sum(1*log2(1+Pn_opt{1,i}.*csi_ra{i,slot})); % Max Throughput without considering the bandwidth, B
         end
     end
 end

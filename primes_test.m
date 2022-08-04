@@ -23,6 +23,7 @@ for r=runs(2:end)
     [s.Pn_opt,s.csi_ra,s.Cn] = waterfilling(s.csi,s.C,s.RBs,s.Pt,s.Rb_size,p_aloc_rate);
     [s.Pn_opt2,s.csi_ra2,s.Cn2] = waterfilling(s.csi,s.C_nh,s.RBs,s.Pt,s.Rb_size,p_aloc_rate);
     [s.Pn_opt3,s.csi_ra3,s.Cn3] = waterfilling(s.csi,s.C_ideal,s.RBs,s.Pt,s.Rb_size,p_aloc_rate);
+    [s.Pn_opt4,s.csi_ra4,s.Cn4] = waterfilling(s.csi,s.C_ideal,s.RBs,s.Pt,s.Rb_size,1);
 
     s.count = zeros(1,s.Nu);
     for i=1:s.Nu
