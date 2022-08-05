@@ -97,12 +97,12 @@ function loss_test(d0, N)
         th3 = [th3 t3];
         th4 = [th4 t4];
         th5 = [th5 t5];
+        f = sprintf('loss_comp_N%d_d0_0p%d.mat', N, round(10*abs(d0 - fix(d0))));
+        save(f, 'd0', 'ds_array', 'output', 'output2', 'output3', 'output4','N', 'k', 'th1', 'th2', 'th3', 'th4', 'th5')
     end
     %figure(1);
     %plot(ds_array, output);
     %title('Hopping Throughput Loss vs d_{s}');
     %ylabel('Througput Loss %');
     %xlabel('d_{s}');
-    f = sprintf('loss_comp_N%d_d0_0p%d.mat', N, round(10*abs(d0 - fix(d0))));
-    save(f, 'd0', 'ds_array', 'output', 'output2', 'output3', 'output4','N', 'k', 'th1', 'th2', 'th3', 'th4', 'th5')
 end
