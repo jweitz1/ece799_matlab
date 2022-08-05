@@ -64,7 +64,7 @@ function loss_test(d0, N)
             s.Th4=sum(cell2mat(s.Cn4))/s.Nu/s.Nclu;
             fprintf("Ideal FH Continous Power average throughput per slot %f bps/Hz\n", s.Th4)
             s.Th5=sum(cell2mat(s.Cn5))/s.Nu/s.Nclu;
-            fprintf("Ideal FH Continous Power average throughput per slot %f bps/Hz\n", s.Th5)
+            fprintf("Non FH Continous Power average throughput per slot %f bps/Hz\n", s.Th5)
             s.Th6=sum(cell2mat(s.Cn6))/s.Nu/s.Nclu;
             fprintf("FH Continous Power average throughput per slot %f bps/Hz\n", s.Th6)
             %fprintf("Hopping Throughput Loss %f%%\n", 100.0-(s.Th/s.Th2)*100.0);

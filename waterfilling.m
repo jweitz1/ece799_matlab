@@ -53,7 +53,7 @@ function [Pn_opt,csi_ra, Cn] = waterfilling(csi,C, RBs, Pt, Rb_size, update_peri
                 %If it's the update period, update the power allocation for the slot
                 Pn{1,i} = max((1./mu_axis - (1./csi_ra{i,slot})'),0); % A value less than 0 will be replaced by 0.
                 %% Lagrange Dual Function
-                g{1,i} = sum(log(1+Pn{1,i}.*(repmat(csi_ra{i,slot}',[1 M])))) - mu_axis.*(sum(Pn{1,i}) - Pt);
+                g{1,i} = sum(log2(1+Pn{1,i}.*(repmat(csi_ra{i,slot}',[1 M])))) - mu_axis.*(sum(Pn{1,i}) - Pt);
                 %We have to find the minimum of g
                 [ind]= find(g{1,i}==min(g{1,i})); %We need the index to compute the optimal mu
                 mu = mu_axis(ind);
